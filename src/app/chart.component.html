@@ -1,3 +1,14 @@
-<h1>
-  {{title}}
-</h1>
+<div *ngIf="pcmContainer">
+  <h3>{{pcmContainer.pcm.name}}</h3>
+  <ul>
+    <li *ngFor="let feature of pcmContainer.pcm.features.array">
+      {{feature.name}}
+    </li>
+  </ul>
+
+  <ul>
+    <li *ngFor="let product of pcmContainer.pcm.products.array">
+      {{pcmApi.getProductsKey(product, pcmContainer.pcm.productsKey)}}
+    </li>
+  </ul>
+</div>
