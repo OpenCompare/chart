@@ -5,7 +5,6 @@ import { HTTP_PROVIDERS } from '@angular/http';
 import 'rxjs/Rx'; // For using methods on observables
 
 
-
 if (environment.production) {
   enableProdMode();
 }

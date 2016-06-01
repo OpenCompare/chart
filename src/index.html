@@ -18,6 +18,7 @@
 
     {{#each scripts.polyfills}}<script src="{{.}}"></script>{{/each}}
     <script type="text/javascript" src="org.opencompare.model.pcm.min.js"></script>
+    <script type="text/javascript" src="vendor/plotly.js/dist/plotly.min.js"></script>
     <script>
       System.import('system-config.js').then(function () {
         System.import('main');

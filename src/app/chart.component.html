@@ -1,14 +1,26 @@
 <div *ngIf="pcmContainer">
   <h3>{{pcmContainer.pcm.name}}</h3>
-  <ul>
-    <li *ngFor="let feature of pcmContainer.pcm.features.array">
-      {{feature.name}}
-    </li>
-  </ul>
 
-  <ul>
-    <li *ngFor="let product of pcmContainer.pcm.products.array">
-      {{pcmApi.getProductsKey(product, pcmContainer.pcm.productsKey)}}
-    </li>
-  </ul>
+  <strong>X axis</strong>
+  <select [ngModel]="xAxis" (ngModelChange)="changeXAxis($event)">
+    <option *ngFor="let feature of pcmContainer.pcm.features.array" [ngValue]="feature">{{feature.name}}</option>
+  </select>
+
+  <strong>Y axis</strong>
+  <select [ngModel]="yAxis" (ngModelChange)="changeYAxis($event)">
+    <option *ngFor="let feature of pcmContainer.pcm.features.array" [ngValue]="feature">{{feature.name}}</option>
+  </select>
+
+  <strong>Size</strong>
+  <select [ngModel]="size" (ngModelChange)="changeSize($event)">
+    <option *ngFor="let feature of pcmContainer.pcm.features.array" [ngValue]="feature">{{feature.name}}</option>
+  </select>
+
+  <strong>Color</strong>
+  <select [ngModel]="color" (ngModelChange)="changeColor($event)">
+    <option *ngFor="let feature of pcmContainer.pcm.features.array" [ngValue]="feature">{{feature.name}}</option>
+  </select>
+
 </div>
+
+<div id="chart" style="width:600px;height:250px;"></div>

@@ -3,7 +3,8 @@
  **********************************************************************************************/
 /** Map relative paths to URLs. */
 const map: any = {
-  "org.opencompare.model.pcm": "org.opencompare.model.pcm.min.js"
+  "org.opencompare.model.pcm": "org.opencompare.model.pcm.min.js",
+  "plotly": "vendor/plotly.js/dist/plotly.min.js"
 };
 
 /** User packages configuration. */
