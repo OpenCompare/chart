@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Http } from '@angular/http';
 import {PCMApi} from "./PCMApi";
 
@@ -19,15 +19,17 @@ export class ChartAppComponent implements OnInit {
   yAxis : any;
   size : any;
   color : any;
+  products : any[];
+  productHover : any;
 
   chartDiv: HTMLDivElement;
 
-  constructor(private http: Http) {
+  constructor(private http: Http, private ref: ChangeDetectorRef) {
 
   };
 
   ngOnInit() {
-    this.http.get("http://localhost:9000/api/get/5667063678c2faf9781b6f64")
+    this.http.get("http://localhost:9000/api/get/5667063878c2faf9781b6f80")
       .map(r => r.json())
       .subscribe(response => {
 
@@ -37,9 +39,9 @@ export class ChartAppComponent implements OnInit {
 
         this.chartDiv = <HTMLDivElement> document.getElementById('chart');
         let features = this.pcmContainer.pcm.features.array;
-        this.xAxis = features[0];
-        this.yAxis = features[1];
-        this.size = features[2];
+        this.xAxis = features[3];
+        this.yAxis = features[3];
+        this.size = features[3];
         this.color = features[3];
 
         this.updateChart();
@@ -90,30 +92,30 @@ export class ChartAppComponent implements OnInit {
 
     let products = this.listProducts();
 
-    let sizes = this.getValues(products, this.size);
-    let maxSize = 0;
-    sizes.forEach((size) => {
-      let parsedSize = parseFloat(size);
-      if (parsedSize > maxSize) {
-        maxSize = parsedSize
-      }
-    });
+    let rawSizes = this.getValues(products, this.size).map((value) => parseFloat(value));
+    let sizes = rawSizes.map((value) =>(value - Math.min(...rawSizes)) / (Math.max(...rawSizes) - Math.min(...rawSizes)));
+
+    let rawColors: number[] = this.getValues(products, this.color).map((value) => parseFloat(value));
+    let colors = rawColors.map((value) => (value - Math.min(...rawColors)) / (Math.max(...rawColors) - Math.min(...rawColors)));
 
     var data = [{
       name: "Products",
       text: this.getProductNames(products),
       marker: {
         sizemode: "area",
-        sizeref: maxSize,
-        size : sizes
+        sizemin: 2,
+        sizeref: 0.001,
+        size : sizes,
+        colorscale: [[0,'rgb(0,255,0,1)'], [0.5,'rgb(255,165,0,1)'], [1,'rgba(255,0,0,1)']],
+        color: colors
       },
       mode: "markers",
       x: this.getValues(products, this.yAxis),
-      y: this.getValues(products, this.xAxis),
-      uid: "99da6d"
+      y: this.getValues(products, this.xAxis)
     }];
 
     var layout = {
+      // title: this.pcmContainer.pcm.name,
       xaxis: {
         title: this.xAxis.name
       },
@@ -127,5 +129,20 @@ export class ChartAppComponent implements OnInit {
     };
 
     Plotly.newPlot(this.chartDiv, data, layout);
+
+    (<any>this.chartDiv).on('plotly_hover', (data) => {
+      console.log(data);
+      let productName = data.points[0].data.text[data.points[0].pointNumber];
+      this.productHover = this.pcmContainer.pcm.productsKey.cells.array.find((cell) => cell.content === productName).product;
+      console.log(this.productHover);
+      this.ref.detectChanges();
+    });
+
+    (<any>this.chartDiv).on('plotly_unhover', (data) => {
+      this.productHover = null;
+      this.ref.detectChanges();
+    });
+
   }
+
 }
