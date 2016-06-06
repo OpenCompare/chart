@@ -22,6 +22,8 @@ export class ChartAppComponent implements OnInit {
   products : any[];
   productHover : any;
 
+  numericalFeatures : any[];
+
   chartDiv: HTMLDivElement;
 
   constructor(private http: Http, private ref: ChangeDetectorRef) {
@@ -29,22 +31,37 @@ export class ChartAppComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.http.get("http://localhost:9000/api/get/5667063878c2faf9781b6f80")
+    // this.http.get("http://localhost:9000/api/get/5667063878c2faf9781b6f80")
+    this.http.get("http://localhost:9000/api/get/5667065078c2faf9781b7271")
       .map(r => r.json())
       .subscribe(response => {
 
+        this.chartDiv = <HTMLDivElement> document.getElementById('chart');
+
+        // Load PCM
         this.pcmContainer = response;
         this.pcmContainer.pcm = this.pcmApi.loadPCMModelFromString(JSON.stringify(response.pcm));
         this.pcmApi.decodePCM(this.pcmContainer.pcm);
 
-        this.chartDiv = <HTMLDivElement> document.getElementById('chart');
-        let features = this.pcmContainer.pcm.features.array;
-        this.xAxis = features[3];
-        this.yAxis = features[3];
-        this.size = features[3];
-        this.color = features[3];
+        // Filter numerical features
+        this.numericalFeatures = this.pcmContainer.pcm.features.array.filter((feature) => {
+          let type = this.pcmApi.getMainTypeOfFeature(feature);
+          return type === "org.opencompare.model.IntegerValue" || type === "org.opencompare.model.DoubleValue";
+        });
 
-        this.updateChart();
+
+
+        if (this.numericalFeatures.length > 0) {
+          // Initialize axes
+          this.xAxis = this.numericalFeatures[0];
+          this.yAxis = this.numericalFeatures[0];
+          this.size = this.numericalFeatures[0];
+          this.color = this.numericalFeatures[0];
+
+          // Initialize chart
+          this.updateChart();
+        }
+
       });
   }
 
@@ -131,10 +148,8 @@ export class ChartAppComponent implements OnInit {
     Plotly.newPlot(this.chartDiv, data, layout);
 
     (<any>this.chartDiv).on('plotly_hover', (data) => {
-      console.log(data);
       let productName = data.points[0].data.text[data.points[0].pointNumber];
       this.productHover = this.pcmContainer.pcm.productsKey.cells.array.find((cell) => cell.content === productName).product;
-      console.log(this.productHover);
       this.ref.detectChanges();
     });
 

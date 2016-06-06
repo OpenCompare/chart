@@ -1,5 +1,8 @@
 declare var Kotlin: any;
 
+import 'rxjs/Rx'
+import {Observable} from 'rxjs/Rx';
+
 export class PCMApi {
 
   loader: any;
@@ -59,6 +62,13 @@ export class PCMApi {
       product.cells.array.forEach(function (cell) {
         cell.content = encodeToBase64(cell.content, encoding);
         cell.rawContent = encodeToBase64(cell.rawContent, encoding);
+
+        // TODO : recursive encoding/decoding of interpretation
+        if (typeof cell.interpretation !== "undefined" &&
+          cell.interpretation.metaClassName() === "org.opencompare.model.StringValue") {
+          cell.interpretation.value = encodeToBase64(cell.interpretation.value, encoding)
+        }
+
       });
     });
   };
@@ -138,6 +148,32 @@ export class PCMApi {
 
   getProductsKey(product, key) {
     return this.findCell(product, key).content;
+  }
+
+  getMainTypeOfFeature(feature) : string {
+
+    let types = {};
+    feature.cells.array.forEach((cell) => {
+        if (typeof cell.interpretation !== "undefined") {
+          let type = cell.interpretation.metaClassName();
+          if (typeof types[type] === "undefined") {
+            types[type] = 0;
+          } else {
+            types[type] = types[type] + 1;
+          }
+
+        }
+      });
+
+    let mainType = {name: "none", count: 0};
+    for (let type in types) {
+      let count = types[type];
+      if (count > mainType.count) {
+        mainType = {name: type, count: count}
+      }
+    }
+
+    return mainType.name;
   }
 
 

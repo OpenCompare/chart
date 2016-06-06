@@ -8,28 +8,28 @@
       <div class="form-group">
         <label for="xAxis">X axis</label>
         <select id="xAxis" [ngModel]="xAxis" (ngModelChange)="changeXAxis($event)" class="form-control">
-          <option *ngFor="let feature of pcmContainer.pcm.features.array" [ngValue]="feature">{{feature.name}}</option>
+          <option *ngFor="let feature of numericalFeatures" [ngValue]="feature">{{feature.name}}</option>
         </select>
       </div>
 
       <div class="form-group">
         <label for="yAxis">Y axis</label>
         <select id="yAxis" [ngModel]="yAxis" (ngModelChange)="changeYAxis($event)" class="form-control">
-          <option *ngFor="let feature of pcmContainer.pcm.features.array" [ngValue]="feature">{{feature.name}}</option>
+          <option *ngFor="let feature of numericalFeatures" [ngValue]="feature">{{feature.name}}</option>
         </select>
       </div>
 
       <div class="form-group">
         <label for="size">Size</label>
         <select id="size" [ngModel]="size" (ngModelChange)="changeSize($event)" class="form-control">
-          <option *ngFor="let feature of pcmContainer.pcm.features.array" [ngValue]="feature">{{feature.name}}</option>
+          <option *ngFor="let feature of numericalFeatures" [ngValue]="feature">{{feature.name}}</option>
         </select>
       </div>
 
       <div class="form-group">
         <label for="color">Color</label>
         <select id="color" [ngModel]="color" (ngModelChange)="changeColor($event)" class="form-control">
-          <option *ngFor="let feature of pcmContainer.pcm.features.array" [ngValue]="feature">{{feature.name}}</option>
+          <option *ngFor="let feature of numericalFeatures" [ngValue]="feature">{{feature.name}}</option>
         </select>
       </div>
     </div>
