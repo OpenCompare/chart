@@ -101,7 +101,15 @@ export class ChartAppComponent implements OnInit {
 
   getValues(products, feature) {
     let values = [];
-    products.forEach((product) => values.push(this.pcmApi.findCell(product, feature).content));
+    products.forEach((product) => {
+      let cell = this.pcmApi.findCell(product, feature);
+      if (typeof cell.interpretation !== "undefined" && this.pcmApi.isNumericalInterpretation(cell.interpretation)) {
+        values.push(cell.interpretation.value)
+      } else {
+        values.push(-1)
+      }
+
+    });
     return values;
   }
 
@@ -111,6 +119,9 @@ export class ChartAppComponent implements OnInit {
 
     let rawSizes = this.getValues(products, this.size).map((value) => parseFloat(value));
     let sizes = rawSizes.map((value) =>(value - Math.min(...rawSizes)) / (Math.max(...rawSizes) - Math.min(...rawSizes)));
+
+
+    console.log(sizes);
 
     let rawColors: number[] = this.getValues(products, this.color).map((value) => parseFloat(value));
     let colors = rawColors.map((value) => (value - Math.min(...rawColors)) / (Math.max(...rawColors) - Math.min(...rawColors)));
@@ -127,8 +138,8 @@ export class ChartAppComponent implements OnInit {
         color: colors
       },
       mode: "markers",
-      x: this.getValues(products, this.yAxis),
-      y: this.getValues(products, this.xAxis)
+      x: this.getValues(products, this.xAxis),
+      y: this.getValues(products, this.yAxis)
     }];
 
     var layout = {

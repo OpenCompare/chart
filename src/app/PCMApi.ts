@@ -176,5 +176,10 @@ export class PCMApi {
     return mainType.name;
   }
 
+  isNumericalInterpretation(interpretation) : boolean {
+    let type = interpretation.metaClassName();
+    return type === "org.opencompare.model.IntegerValue" || type === "org.opencompare.model.DoubleValue";
+  }
+
 
 }
