@@ -65,6 +65,7 @@ export class PCMApi {
 
         // TODO : recursive encoding/decoding of interpretation
         if (typeof cell.interpretation !== "undefined" &&
+          cell.interpretation !== null &&
           cell.interpretation.metaClassName() === "org.opencompare.model.StringValue") {
           cell.interpretation.value = encodeToBase64(cell.interpretation.value, encoding)
         }
@@ -154,7 +155,7 @@ export class PCMApi {
 
     let types = {};
     feature.cells.array.forEach((cell) => {
-        if (typeof cell.interpretation !== "undefined") {
+        if (typeof cell.interpretation !== "undefined" && cell.interpretation !== null) {
           let type = cell.interpretation.metaClassName();
           if (typeof types[type] === "undefined") {
             types[type] = 0;
@@ -164,6 +165,9 @@ export class PCMApi {
 
         }
       });
+
+    console.log(feature.name);
+    console.log(types);
 
     let mainType = {name: "none", count: 0};
     for (let type in types) {
@@ -178,7 +182,7 @@ export class PCMApi {
 
   isNumericalInterpretation(interpretation) : boolean {
     let type = interpretation.metaClassName();
-    return type === "org.opencompare.model.IntegerValue" || type === "org.opencompare.model.DoubleValue";
+    return type === "org.opencompare.model.IntegerValue" || type === "org.opencompare.model.RealValue";
   }
 
 

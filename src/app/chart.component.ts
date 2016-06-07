@@ -32,7 +32,7 @@ export class ChartAppComponent implements OnInit {
 
   ngOnInit() {
     // this.http.get("http://localhost:9000/api/get/5667063878c2faf9781b6f80")
-    this.http.get("http://localhost:9000/api/get/5667065078c2faf9781b7271")
+    this.http.get("http://localhost:9000/api/get/5756e926d244ba0353d2cebc")
       .map(r => r.json())
       .subscribe(response => {
 
@@ -43,20 +43,22 @@ export class ChartAppComponent implements OnInit {
         this.pcmContainer.pcm = this.pcmApi.loadPCMModelFromString(JSON.stringify(response.pcm));
         this.pcmApi.decodePCM(this.pcmContainer.pcm);
 
+        this.products = this.pcmContainer.pcm.products.array;
+
         // Filter numerical features
         this.numericalFeatures = this.pcmContainer.pcm.features.array.filter((feature) => {
           let type = this.pcmApi.getMainTypeOfFeature(feature);
-          return type === "org.opencompare.model.IntegerValue" || type === "org.opencompare.model.DoubleValue";
+          return type === "org.opencompare.model.IntegerValue" || type === "org.opencompare.model.RealValue";
         });
 
 
 
         if (this.numericalFeatures.length > 0) {
           // Initialize axes
-          this.xAxis = this.numericalFeatures[0];
-          this.yAxis = this.numericalFeatures[0];
-          this.size = this.numericalFeatures[0];
-          this.color = this.numericalFeatures[0];
+          this.xAxis = this.numericalFeatures[1];
+          this.yAxis = this.numericalFeatures[3];
+          this.size = this.numericalFeatures[2];
+          this.color = this.numericalFeatures[4];
 
           // Initialize chart
           this.updateChart();
@@ -87,10 +89,6 @@ export class ChartAppComponent implements OnInit {
     this.updateChart();
   }
 
-  listProducts() {
-    return this.pcmContainer.pcm.products.array;
-  }
-
   getProductNames(products) {
     let productNames = [];
     products.forEach((product) =>
@@ -115,20 +113,15 @@ export class ChartAppComponent implements OnInit {
 
   updateChart() {
 
-    let products = this.listProducts();
-
-    let rawSizes = this.getValues(products, this.size).map((value) => parseFloat(value));
+    let rawSizes = this.getValues(this.products, this.size).map((value) => parseFloat(value));
     let sizes = rawSizes.map((value) =>(value - Math.min(...rawSizes)) / (Math.max(...rawSizes) - Math.min(...rawSizes)));
 
-
-    console.log(sizes);
-
-    let rawColors: number[] = this.getValues(products, this.color).map((value) => parseFloat(value));
+    let rawColors: number[] = this.getValues(this.products, this.color).map((value) => parseFloat(value));
     let colors = rawColors.map((value) => (value - Math.min(...rawColors)) / (Math.max(...rawColors) - Math.min(...rawColors)));
 
     var data = [{
       name: "Products",
-      text: this.getProductNames(products),
+      text: this.getProductNames(this.products),
       marker: {
         sizemode: "area",
         sizemin: 2,
@@ -138,8 +131,8 @@ export class ChartAppComponent implements OnInit {
         color: colors
       },
       mode: "markers",
-      x: this.getValues(products, this.xAxis),
-      y: this.getValues(products, this.yAxis)
+      x: this.getValues(this.products, this.xAxis),
+      y: this.getValues(this.products, this.yAxis)
     }];
 
     var layout = {
