@@ -7,7 +7,7 @@ import {PCMApi} from "../PCMApi";
   templateUrl: 'product-details.component.html',
   styleUrls: ['product-details.component.css']
 })
-export class ProductDetailsComponent implements OnInit, OnChanges {
+export class ProductDetailsComponent implements OnInit {
 
   pcmApi = new PCMApi();
 
@@ -20,8 +20,4 @@ export class ProductDetailsComponent implements OnInit, OnChanges {
 
   }
 
-
-  ngOnChanges(changes:{}):any {
-    console.log(changes);
-  }
 }

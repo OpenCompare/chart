@@ -1,4 +1,4 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ChangeDetectorRef} from "@angular/core";
 import {Http} from "@angular/http";
 import {ConfiguratorComponent} from "./configurator/configurator.component";
 import {ProductChartComponent} from "./product-chart/product-chart.component";
@@ -18,7 +18,7 @@ export class ChartAppComponent implements OnInit {
   pcmContainer : any;
   selectedProduct : any;
 
-  constructor(private http: Http) {
+  constructor(private http: Http, private ref : ChangeDetectorRef) {
 
   };
 
@@ -38,6 +38,7 @@ export class ChartAppComponent implements OnInit {
 
   changeSelectedProduct(event) {
     this.selectedProduct = event;
+    this.ref.detectChanges();
   }
 
 

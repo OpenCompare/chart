@@ -154,7 +154,6 @@ export class ProductChartComponent implements OnInit, OnChanges {
     });
 
     (<any>this.chartDiv).on('plotly_unhover', (data) => {
-      this.selectedProduct.emit(null);
       this.ref.detectChanges();
     });
 
