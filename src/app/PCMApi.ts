@@ -166,8 +166,8 @@ export class PCMApi {
         }
       });
 
-    console.log(feature.name);
-    console.log(types);
+    // console.log(feature.name);
+    // console.log(types);
 
     let mainType = {name: "none", count: 0};
     for (let type in types) {

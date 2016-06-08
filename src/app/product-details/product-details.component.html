@@ -1,0 +1,18 @@
+<div>
+  <strong *ngIf="product">{{pcmApi.getProductsKey(product, pcmContainer.pcm.productsKey)}}</strong>
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th>Feature</th>
+      <th>Value</th>
+    </tr>
+    </thead>
+    <tbody *ngIf="product">
+    <tr *ngFor="let feature of pcmContainer.pcm.features.array">
+      <td>{{feature.name}}</td>
+      <td>{{pcmApi.findCell(product, feature).content}}</td>
+    </tr>
+    </tbody>
+  </table>
+
+</div>

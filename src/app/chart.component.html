@@ -1,82 +1,21 @@
-<div class="row" *ngIf="pcmContainer">
-  <h3>{{pcmContainer.pcm.name}}</h3>
-
-  <form class="form-horizontal">
-    <div class="form-group" *ngFor="let feature of pcmContainer.pcm.features.array">
-
-      <label [attr.data-for]="feature" class="col-sm-2 control-label">{{feature.name}}</label>
-      <div class="col-sm-10">
-        <select [id]="feature" class="form-control">
-          <option *ngFor="let cell of feature.cells.array">{{cell.content}}</option>
-        </select>
-      </div>
-
-    </div>
-  </form>
-
-</div>
-
+<h3 *ngIf="pcmContainer">{{pcmContainer.pcm.name}}</h3>
 
 <div class="row">
-
-
-
-  <div class="col-md-4" *ngIf="pcmContainer">
-    <div>
-      <div class="form-group">
-        <label for="xAxis">X axis</label>
-        <select id="xAxis" [ngModel]="xAxis" (ngModelChange)="changeXAxis($event)" class="form-control">
-          <option *ngFor="let feature of numericalFeatures" [ngValue]="feature">{{feature.name}}</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="yAxis">Y axis</label>
-        <select id="yAxis" [ngModel]="yAxis" (ngModelChange)="changeYAxis($event)" class="form-control">
-          <option *ngFor="let feature of numericalFeatures" [ngValue]="feature">{{feature.name}}</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="size">Size</label>
-        <select id="size" [ngModel]="size" (ngModelChange)="changeSize($event)" class="form-control">
-          <option *ngFor="let feature of numericalFeatures" [ngValue]="feature">{{feature.name}}</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="color">Color</label>
-        <select id="color" [ngModel]="color" (ngModelChange)="changeColor($event)" class="form-control">
-          <option *ngFor="let feature of numericalFeatures" [ngValue]="feature">{{feature.name}}</option>
-        </select>
-      </div>
-    </div>
-
-
-
+  <div class="col-md-3">
+    <oc-configurator [pcmContainer]="pcmContainer"></oc-configurator>
   </div>
 
-  <div id="chart" class="col-md-8 oc-chart"></div>
+  <div class="col-md-9">
+    <div class="row">
+      <oc-product-chart [pcmContainer]="pcmContainer" (selectedProduct)="changeSelectedProduct($event)"></oc-product-chart>
+    </div>
+    <div class="row">
+      <oc-product-details [pcmContainer]="pcmContainer" [product]="selectedProduct"></oc-product-details>
+    </div>
+  </div>
 
 
 </div>
 
-<div class="row" *ngIf="productHover">
-  <strong>{{pcmApi.getProductsKey(productHover, pcmContainer.pcm.productsKey)}}</strong>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Feature</th>
-        <th>Value</th>
-      </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let feature of pcmContainer.pcm.features.array">
-      <td>{{feature.name}}</td>
-      <td>{{pcmApi.findCell(productHover, feature).content}}</td>
-    </tr>
-    </tbody>
-  </table>
 
-</div>
 

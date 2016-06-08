@@ -1,167 +1,45 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Http } from '@angular/http';
+import {Component, OnInit} from "@angular/core";
+import {Http} from "@angular/http";
+import {ConfiguratorComponent} from "./configurator/configurator.component";
+import {ProductChartComponent} from "./product-chart/product-chart.component";
 import {PCMApi} from "./PCMApi";
-
-declare var Plotly: any;
+import {ProductDetailsComponent} from "./product-details/product-details.component";
 
 @Component({
   moduleId: module.id,
   selector: 'chart-app',
   templateUrl: 'chart.component.html',
-  styleUrls: ['chart.component.css']
+  styleUrls: ['chart.component.css'],
+  directives: [ConfiguratorComponent, ProductChartComponent, ProductDetailsComponent]
 })
 export class ChartAppComponent implements OnInit {
 
   pcmApi = new PCMApi();
   pcmContainer : any;
+  selectedProduct : any;
 
-  xAxis : any;
-  yAxis : any;
-  size : any;
-  color : any;
-  products : any[];
-  productHover : any;
-
-  numericalFeatures : any[];
-
-  chartDiv: HTMLDivElement;
-
-  constructor(private http: Http, private ref: ChangeDetectorRef) {
+  constructor(private http: Http) {
 
   };
 
   ngOnInit() {
-    // this.http.get("http://localhost:9000/api/get/5667063878c2faf9781b6f80")
     this.http.get("http://localhost:9000/api/get/5756e926d244ba0353d2cebc")
       .map(r => r.json())
       .subscribe(response => {
 
-        this.chartDiv = <HTMLDivElement> document.getElementById('chart');
-
         // Load PCM
         this.pcmContainer = response;
-        this.pcmContainer.pcm = this.pcmApi.loadPCMModelFromString(JSON.stringify(response.pcm));
+        this.pcmContainer.pcm = this.pcmApi.loadPCMModelFromString(JSON.stringify(this.pcmContainer.pcm));
         this.pcmApi.decodePCM(this.pcmContainer.pcm);
-
-        this.products = this.pcmContainer.pcm.products.array;
-
-        // Filter numerical features
-        this.numericalFeatures = this.pcmContainer.pcm.features.array.filter((feature) => {
-          let type = this.pcmApi.getMainTypeOfFeature(feature);
-          return type === "org.opencompare.model.IntegerValue" || type === "org.opencompare.model.RealValue";
-        });
-
-
-
-        if (this.numericalFeatures.length > 0) {
-          // Initialize axes
-          this.xAxis = this.numericalFeatures[1];
-          this.yAxis = this.numericalFeatures[3];
-          this.size = this.numericalFeatures[2];
-          this.color = this.numericalFeatures[4];
-
-          // Initialize chart
-          this.updateChart();
-        }
 
       });
   }
 
-  changeXAxis(event) {
-    this.xAxis = event;
-    this.updateChart();
 
+  changeSelectedProduct(event) {
+    this.selectedProduct = event;
   }
 
-  changeYAxis(event) {
-    this.yAxis = event;
-    this.updateChart();
 
-  }
-
-  changeSize(event) {
-    this.size = event;
-    this.updateChart();
-  }
-
-  changeColor(event) {
-    this.color = event;
-    this.updateChart();
-  }
-
-  getProductNames(products) {
-    let productNames = [];
-    products.forEach((product) =>
-      productNames.push(this.pcmApi.getProductsKey(product, this.pcmContainer.pcm.productsKey))
-    );
-    return productNames;
-  }
-
-  getValues(products, feature) {
-    let values = [];
-    products.forEach((product) => {
-      let cell = this.pcmApi.findCell(product, feature);
-      if (typeof cell.interpretation !== "undefined" && this.pcmApi.isNumericalInterpretation(cell.interpretation)) {
-        values.push(cell.interpretation.value)
-      } else {
-        values.push(-1)
-      }
-
-    });
-    return values;
-  }
-
-  updateChart() {
-
-    let rawSizes = this.getValues(this.products, this.size).map((value) => parseFloat(value));
-    let sizes = rawSizes.map((value) =>(value - Math.min(...rawSizes)) / (Math.max(...rawSizes) - Math.min(...rawSizes)));
-
-    let rawColors: number[] = this.getValues(this.products, this.color).map((value) => parseFloat(value));
-    let colors = rawColors.map((value) => (value - Math.min(...rawColors)) / (Math.max(...rawColors) - Math.min(...rawColors)));
-
-    var data = [{
-      name: "Products",
-      text: this.getProductNames(this.products),
-      marker: {
-        sizemode: "area",
-        sizemin: 2,
-        sizeref: 0.001,
-        size : sizes,
-        colorscale: [[0,'rgb(0,255,0,1)'], [0.5,'rgb(255,165,0,1)'], [1,'rgba(255,0,0,1)']],
-        color: colors
-      },
-      mode: "markers",
-      x: this.getValues(this.products, this.xAxis),
-      y: this.getValues(this.products, this.yAxis)
-    }];
-
-    var layout = {
-      // title: this.pcmContainer.pcm.name,
-      xaxis: {
-        title: this.xAxis.name
-      },
-      yaxis: {
-        title: this.yAxis.name
-      },
-      margin: {
-        t: 20
-      },
-      hovermode: 'closest'
-    };
-
-    Plotly.newPlot(this.chartDiv, data, layout);
-
-    (<any>this.chartDiv).on('plotly_hover', (data) => {
-      let productName = data.points[0].data.text[data.points[0].pointNumber];
-      this.productHover = this.pcmContainer.pcm.productsKey.cells.array.find((cell) => cell.content === productName).product;
-      this.ref.detectChanges();
-    });
-
-    (<any>this.chartDiv).on('plotly_unhover', (data) => {
-      this.productHover = null;
-      this.ref.detectChanges();
-    });
-
-  }
 
 }
