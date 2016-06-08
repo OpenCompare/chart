@@ -1,14 +1,18 @@
-<div *ngIf="pcmContainer">
-  <form class="form-horizontal">
-    <div class="form-group" *ngFor="let feature of pcmContainer.pcm.features.array">
+<form class="form-horizontal">
+  <div class="form-group" *ngFor="let feature of features">
 
-      <label [attr.data-for]="feature" class="col-sm-2 control-label">{{feature.name}}</label>
-      <div class="col-sm-10">
-        <select [id]="feature" class="form-control">
-          <option *ngFor="let cell of feature.cells.array">{{cell.content}}</option>
-        </select>
+    <label [attr.data-for]="feature" class="col-sm-2 control-label">{{feature.name}}</label>
+    <div class="col-sm-10" [ngSwitch]="feature.type">
+      <div class="checkbox" *ngSwitchWhen='"BooleanValue"' >
+          <input type="checkbox" class="form-control" #checkbox (change)="filter(feature, checkbox.checked)">
       </div>
 
+      <input *ngSwitchWhen='"IntegerValue"' type="number" class="form-control">
+
+      <select *ngSwitchDefault [id]="feature" class="form-control">
+        <option *ngFor="let cell of feature.cells.array">{{cell.content}}</option>
+      </select>
     </div>
-  </form>
-</div>
+
+  </div>
+</form>

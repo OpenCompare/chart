@@ -1,4 +1,7 @@
-import {Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChange, Output} from '@angular/core';
+import {
+  Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChange, Output, Renderer,
+  ElementRef
+} from '@angular/core';
 import {Http} from "@angular/http";
 import {PCMApi} from "../PCMApi";
 import {EventEmitter} from "@angular/compiler/src/facade/async";
@@ -27,7 +30,9 @@ export class ProductChartComponent implements OnInit, OnChanges {
 
   chartDiv: HTMLDivElement;
 
-  constructor(private ref: ChangeDetectorRef) {}
+  constructor(private ref: ChangeDetectorRef, private renderer: Renderer, private elementRef : ElementRef) {
+
+  }
 
   ngOnInit() {
 
