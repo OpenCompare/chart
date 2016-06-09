@@ -1,6 +1,6 @@
 import {
   Component, OnInit, ChangeDetectorRef, Input, OnChanges, SimpleChange, Output, Renderer,
-  ElementRef
+  ElementRef, DoCheck
 } from '@angular/core';
 import {Http} from "@angular/http";
 import {PCMApi} from "../PCMApi";
@@ -14,7 +14,7 @@ declare var Plotly: any;
   templateUrl: 'product-chart.component.html',
   styleUrls: ['product-chart.component.css']
 })
-export class ProductChartComponent implements OnInit, OnChanges {
+export class ProductChartComponent implements OnInit, OnChanges, DoCheck {
 
   pcmApi = new PCMApi();
   @Input() pcmContainer : any;
@@ -40,10 +40,19 @@ export class ProductChartComponent implements OnInit, OnChanges {
 
 
   ngOnChanges(changes:{[propName: string]: SimpleChange}) {
+    this.updatePCM();
+  }
+
+
+  ngDoCheck() {
+    this.updatePCM();
+  }
+
+  updatePCM() {
     if (typeof this.pcmContainer !== "undefined") {
       this.chartDiv = <HTMLDivElement> document.getElementById('chart');
 
-      this.products = this.pcmContainer.pcm.products.array;
+      this.products = this.pcmContainer.pcm.products.array.filter((product) => typeof product.filtered === "undefined" || !product.filtered);
 
       // Filter numerical features
       this.numericalFeatures = this.pcmContainer.pcm.features.array.filter((feature) => {

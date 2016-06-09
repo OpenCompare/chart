@@ -1,18 +1,29 @@
 <form class="form-horizontal">
+
   <div class="form-group" *ngFor="let feature of features">
 
     <label [attr.data-for]="feature" class="col-sm-2 control-label">{{feature.name}}</label>
     <div class="col-sm-10" [ngSwitch]="feature.type">
+
+      <!-- Boolean -->
       <div class="checkbox" *ngSwitchWhen='"BooleanValue"' >
-          <input type="checkbox" class="form-control" #checkbox (change)="filter(feature, checkbox.checked)">
+          <input type="checkbox" #checkbox (change)="filterBoolean(feature, checkbox.checked)">
       </div>
 
-      <input *ngSwitchWhen='"IntegerValue"' type="number" class="form-control">
+      <!-- Integer -->
+      <input *ngSwitchWhen='"IntegerValue"' [min]="feature.min" [max]="feature.max" [value]="feature.min" type="number" class="form-control">
+      <input *ngSwitchWhen='"IntegerValue"' [min]="feature.min" [max]="feature.max" [value]="feature.max" type="number" class="form-control">
 
-      <select *ngSwitchDefault [id]="feature" class="form-control">
-        <option *ngFor="let cell of feature.cells.array">{{cell.content}}</option>
+      <!-- Real -->
+      <input *ngSwitchWhen='"RealValue"' type="number" class="form-control">
+
+      <!-- Default -->
+      <select *ngSwitchDefault [id]="feature" class="form-control" multiple>
+        <option *ngFor="let content of uniqueValues(feature)">{{content}}</option>
       </select>
+
     </div>
 
   </div>
+
 </form>

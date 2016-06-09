@@ -24,17 +24,25 @@ export class ConfiguratorComponent implements OnInit, OnChanges {
   ngOnChanges(changes:{}):any {
     if (typeof this.pcmContainer !== "undefined") {
       this.features = this.pcmContainer.pcm.features.array;
-
+      
       // Compute main type of features in order to create specialized inputs
       this.features.forEach((feature) => {
         let type = this.pcmApi.getMainTypeOfFeature(feature);
         feature.type = type.substring("org.opencompare.model.".length);
-        switch(type) {
+        switch(feature.type) {
           case "BooleanValue" :
-                break;
+            break;
           case "IntegerValue" :
-                // TODO : compute min and max
-                break;
+            let integerCells = feature.cells.array.filter((cell) => {
+              let interpretation = cell.interpretation;
+              return typeof interpretation !== "undefined" &&
+                interpretation !== null &&
+                interpretation.metaClassName() === "org.opencompare.model.IntegerValue"
+            });
+            let values = integerCells.map((cell) => cell.interpretation.value);
+            feature.min = Math.min(...values);
+            feature.max = Math.max(...values);
+            break;
           default :
 
         }
@@ -46,19 +54,20 @@ export class ConfiguratorComponent implements OnInit, OnChanges {
     }
   }
 
-  filter(feature, value) {
-    switch(feature.type) {
-      case "BooleanValue" : // FIXME : checkbox is not enough to represent a filter for boolean, we need an undefined state
-        if (value) {
-          // TODO : display only product that contain the feature
-        } else {
-          // TODO : the inverse
-        }
-        break;
-      case "IntegerValue" :
-        break;
-      default :
-
-    }
+  uniqueValues(feature) : Set<string> {
+    let uniqueValues = new Set<string>();
+    feature.cells.array.forEach((cell) => uniqueValues.add(cell.content));
+    return uniqueValues;
   }
+
+  filterBoolean(feature, value) {
+    // FIXME : checkbox is not enough to represent a filter for boolean, we need an undefined state
+    let products = this.pcmContainer.pcm.products.array;
+    products.forEach((product: {filtered : boolean}) => {
+      let cell = this.pcmApi.findCell(product, feature);
+      product.filtered = cell.interpretation.value === value;
+    });
+  }
+
+
 }
