@@ -40,15 +40,15 @@ export class ProductChartComponent implements OnInit, OnChanges, DoCheck {
 
 
   ngOnChanges(changes:{[propName: string]: SimpleChange}) {
-    this.updatePCM();
+    this.updatePCM(true);
   }
 
 
   ngDoCheck() {
-    this.updatePCM();
+    this.updatePCM(false);
   }
 
-  updatePCM() {
+  updatePCM(init: boolean) {
     if (typeof this.pcmContainer !== "undefined") {
       this.chartDiv = <HTMLDivElement> document.getElementById('chart');
 
@@ -62,7 +62,7 @@ export class ProductChartComponent implements OnInit, OnChanges, DoCheck {
 
 
 
-      if (this.numericalFeatures.length > 0) {
+      if (init && this.numericalFeatures.length > 0) {
         // Initialize axes
         this.xAxis = this.numericalFeatures[1];
         this.yAxis = this.numericalFeatures[3];
