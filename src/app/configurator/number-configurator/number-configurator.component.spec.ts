@@ -9,25 +9,25 @@ import {
 import { ComponentFixture, TestComponentBuilder } from '@angular/compiler/testing';
 import { Component } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { IntegerConfiguratorComponent } from './integer-configurator.component';
+import { NumberConfiguratorComponent } from './number-configurator.component';
 
-describe('Component: IntegerConfigurator', () => {
+describe('Component: NumberConfigurator', () => {
   let builder: TestComponentBuilder;
 
-  beforeEachProviders(() => [IntegerConfiguratorComponent]);
+  beforeEachProviders(() => [NumberConfiguratorComponent]);
   beforeEach(inject([TestComponentBuilder], function (tcb: TestComponentBuilder) {
     builder = tcb;
   }));
 
-  it('should inject the component', inject([IntegerConfiguratorComponent],
-      (component: IntegerConfiguratorComponent) => {
+  it('should inject the component', inject([NumberConfiguratorComponent],
+      (component: NumberConfiguratorComponent) => {
     expect(component).toBeTruthy();
   }));
 
   it('should create the component', inject([], () => {
-    return builder.createAsync(IntegerConfiguratorComponentTestController)
+    return builder.createAsync(NumberConfiguratorComponentTestController)
       .then((fixture: ComponentFixture<any>) => {
-        let query = fixture.debugElement.query(By.directive(IntegerConfiguratorComponent));
+        let query = fixture.debugElement.query(By.directive(NumberConfiguratorComponent));
         expect(query).toBeTruthy();
         expect(query.componentInstance).toBeTruthy();
       });
@@ -37,10 +37,10 @@ describe('Component: IntegerConfigurator', () => {
 @Component({
   selector: 'test',
   template: `
-    <app-integer-configurator></app-integer-configurator>
+    <app-number-configurator></app-number-configurator>
   `,
-  directives: [IntegerConfiguratorComponent]
+  directives: [NumberConfiguratorComponent]
 })
-class IntegerConfiguratorComponentTestController {
+class NumberConfiguratorComponentTestController {
 }
 

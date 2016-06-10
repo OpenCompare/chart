@@ -1,14 +1,14 @@
 import {Component, OnInit, Input, OnChanges} from '@angular/core';
 import {PCMApi} from "../PCMApi";
 import {BooleanConfiguratorComponent} from "./boolean-configurator/boolean-configurator.component";
-import {IntegerConfiguratorComponent} from "./integer-configurator/integer-configurator.component";
+import {NumberConfiguratorComponent} from "./number-configurator/number-configurator.component";
 
 @Component({
   moduleId: module.id,
   selector: 'oc-configurator',
   templateUrl: 'configurator.component.html',
   styleUrls: ['configurator.component.css'],
-  directives: [BooleanConfiguratorComponent, IntegerConfiguratorComponent]
+  directives: [BooleanConfiguratorComponent, NumberConfiguratorComponent]
 })
 export class ConfiguratorComponent implements OnInit, OnChanges {
 
@@ -32,14 +32,6 @@ export class ConfiguratorComponent implements OnInit, OnChanges {
       this.features.forEach((feature) => {
         let type = this.pcmApi.getMainTypeOfFeature(feature);
         feature.type = type.substring("org.opencompare.model.".length);
-        switch(feature.type) {
-          case "BooleanValue" :
-            break;
-          case "IntegerValue" :
-            break;
-          default :
-
-        }
       });
 
       // TODO : get values to display in the choices when necessary

@@ -1,13 +1,14 @@
-import {Component, OnInit, Input, OnChanges, SimpleChange} from '@angular/core';
+import {Component, OnInit, Input, OnChanges, SimpleChange, ChangeDetectionStrategy} from '@angular/core';
 import {PCMApi} from "../../PCMApi";
 
 @Component({
   moduleId: module.id,
-  selector: 'oc-integer-configurator',
-  templateUrl: 'integer-configurator.component.html',
-  styleUrls: ['integer-configurator.component.css']
+  selector: 'oc-number-configurator',
+  templateUrl: 'number-configurator.component.html',
+  styleUrls: ['number-configurator.component.css'],
+  changeDetection:  ChangeDetectionStrategy.OnPush
 })
-export class IntegerConfiguratorComponent implements OnInit, OnChanges {
+export class NumberConfiguratorComponent implements OnInit, OnChanges {
 
   @Input() feature: any;
   @Input() products: any[];
@@ -27,13 +28,14 @@ export class IntegerConfiguratorComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes:{[key: string]: SimpleChange}) {
     if (typeof changes["feature"] !== "undefined" && typeof this.feature !== "undefined") {
-      let integerCells = this.feature.cells.array.filter((cell) => {
+      let numberCells = this.feature.cells.array.filter((cell) => {
         let interpretation = cell.interpretation;
         return typeof interpretation !== "undefined" &&
           interpretation !== null &&
-          interpretation.metaClassName() === "org.opencompare.model.IntegerValue"
+          (interpretation.metaClassName() === "org.opencompare.model.IntegerValue" ||
+          interpretation.metaClassName() === "org.opencompare.model.RealValue")
       });
-      let values = integerCells.map((cell) => cell.interpretation.value);
+      let values = numberCells.map((cell) => cell.interpretation.value);
       this.min = Math.min(...values);
       this.max = Math.max(...values);
       this.selectedMin = this.min;

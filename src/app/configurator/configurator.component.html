@@ -9,10 +9,10 @@
       <oc-boolean-configurator *ngSwitchWhen='"BooleanValue"' [feature]="feature" [products]="pcmContainer.pcm.products.array"></oc-boolean-configurator>
 
       <!-- Integer -->
-      <oc-integer-configurator *ngSwitchWhen='"IntegerValue"' [feature]="feature" [products]="pcmContainer.pcm.products.array"></oc-integer-configurator>
+      <oc-number-configurator *ngSwitchWhen='"IntegerValue"' [feature]="feature" [products]="pcmContainer.pcm.products.array"></oc-number-configurator>
 
       <!-- Real -->
-      <input *ngSwitchWhen='"RealValue"' type="number" class="form-control">
+      <oc-number-configurator *ngSwitchWhen='"RealValue"' [feature]="feature" [products]="pcmContainer.pcm.products.array"></oc-number-configurator>
 
       <!-- Default -->
       <select *ngSwitchDefault [id]="feature" class="form-control" multiple>
