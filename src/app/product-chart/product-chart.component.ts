@@ -52,7 +52,7 @@ export class ProductChartComponent implements OnInit, OnChanges, DoCheck {
 
       this.chartDiv = <HTMLDivElement> document.getElementById('chart');
 
-      this.products = this.pcmContainer.pcm.products.array.filter((product) => typeof product.filtered === "undefined" || !product.filtered);
+      this.products = this.pcmContainer.pcm.products.array.filter((product) => !product.isFiltered());
 
       // Filter numerical features
       this.numericalFeatures = this.pcmContainer.pcm.features.array.filter((feature) => {

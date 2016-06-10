@@ -13,11 +13,26 @@ export class PCMApi {
     let factory = new pcmMM.factory.DefaultPcmFactory();
     this.loader = factory.createJSONLoader();
     this.serializer = factory.createJSONSerializer();
+
   }
 
 
   loadPCMModelFromString(json) {
-    return this.loader.loadModelFromString(json).get(0);
+    let model = this.loader.loadModelFromString(json).get(0);
+
+    // Add isFiltered function to products
+    model.products.array.forEach((product) => {
+      product.isFiltered = function() {
+        let filtered = false;
+        for (let filterName in product.filter) {
+          // if (product.hasOwnProperty(filterName)) {
+            filtered = filtered || product.filter[filterName];
+          // }
+        }
+        return filtered;
+      }
+    });
+    return model;
   };
 
   serializePCM (pcm) {
@@ -185,5 +200,12 @@ export class PCMApi {
     return type === "org.opencompare.model.IntegerValue" || type === "org.opencompare.model.RealValue";
   }
 
+
+  setFilter(product, feature, filtered) {
+    if (typeof product.filter === "undefined") {
+      product.filter = {};
+    }
+    product.filter[feature.name] = filtered;
+  }
 
 }

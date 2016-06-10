@@ -44,9 +44,10 @@ export class BooleanConfiguratorComponent implements OnInit {
         break;
     }
 
-    this.products.forEach((product: {filtered : boolean}) => {
+    this.products.forEach((product: {filter : any}) => {
       let cell = this.pcmApi.findCell(product, this.feature);
-      product.filtered = !this.indeterminate && cell.interpretation.value === this.checked;
+      let filtered = !this.indeterminate && cell.interpretation.value === this.checked;
+      this.pcmApi.setFilter(product, this.feature, filtered);
     });
   }
 }

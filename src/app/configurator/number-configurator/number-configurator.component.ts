@@ -54,10 +54,11 @@ export class NumberConfiguratorComponent implements OnInit, OnChanges {
   }
 
   update() {
-    this.products.forEach((product: {filtered : boolean}) => {
+    this.products.forEach((product: {filter : any}) => {
       let cell = this.pcmApi.findCell(product, this.feature);
       let value = cell.interpretation.value;
-      product.filtered = value < this.selectedMin || this.selectedMax < value;
+      let filtered = value < this.selectedMin || this.selectedMax < value;
+      this.pcmApi.setFilter(product, this.feature, filtered)
     });
   }
 }

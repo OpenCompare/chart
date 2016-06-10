@@ -33,10 +33,6 @@ export class ConfiguratorComponent implements OnInit, OnChanges {
         let type = this.pcmApi.getMainTypeOfFeature(feature);
         feature.type = type.substring("org.opencompare.model.".length);
       });
-
-      // TODO : get values to display in the choices when necessary
-      // TODO : add listener to filter products depending on the user choices
-
     }
   }
 
