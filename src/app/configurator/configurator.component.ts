@@ -1,13 +1,14 @@
 import {Component, OnInit, Input, OnChanges} from '@angular/core';
 import {PCMApi} from "../PCMApi";
 import {BooleanConfiguratorComponent} from "./boolean-configurator/boolean-configurator.component";
+import {IntegerConfiguratorComponent} from "./integer-configurator/integer-configurator.component";
 
 @Component({
   moduleId: module.id,
   selector: 'oc-configurator',
   templateUrl: 'configurator.component.html',
   styleUrls: ['configurator.component.css'],
-  directives: [BooleanConfiguratorComponent]
+  directives: [BooleanConfiguratorComponent, IntegerConfiguratorComponent]
 })
 export class ConfiguratorComponent implements OnInit, OnChanges {
 
@@ -35,15 +36,6 @@ export class ConfiguratorComponent implements OnInit, OnChanges {
           case "BooleanValue" :
             break;
           case "IntegerValue" :
-            let integerCells = feature.cells.array.filter((cell) => {
-              let interpretation = cell.interpretation;
-              return typeof interpretation !== "undefined" &&
-                interpretation !== null &&
-                interpretation.metaClassName() === "org.opencompare.model.IntegerValue"
-            });
-            let values = integerCells.map((cell) => cell.interpretation.value);
-            feature.min = Math.min(...values);
-            feature.max = Math.max(...values);
             break;
           default :
 

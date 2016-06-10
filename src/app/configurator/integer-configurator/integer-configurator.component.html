@@ -1,0 +1,2 @@
+<input [ngModel]="selectedMin" (ngModelChange)="updateMin($event)" [min]="min" [max]="selectedMax" type="number" class="form-control">
+<input [ngModel]="selectedMax" (ngModelChange)="updateMax($event)" [min]="selectedMin" [max]="max" type="number" class="form-control">

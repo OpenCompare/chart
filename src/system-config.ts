@@ -35,6 +35,7 @@ const barrels: string[] = [
   'app/product-chart',
   'app/product-details',
   'app/configurator/boolean-configurator',
+  'app/configurator/integer-configurator',
   /** @cli-barrel */
 ];
 
