@@ -126,13 +126,22 @@ export class ProductChartComponent implements OnInit, OnChanges, DoCheck {
     return values;
   }
 
+  normalizeNumbers(numbers: number[]) {
+    let min = Math.min(...numbers);
+    let max = Math.max(...numbers);
+    let normalizedNumbers;
+    if (max - min !== 0) {
+      normalizedNumbers = numbers.map((value) =>(value - min) / (max - min));
+    } else {
+      normalizedNumbers = numbers.map((value) => 1)
+    }
+    return normalizedNumbers;
+  }
+
   updateChart() {
 
-    let rawSizes = this.getValues(this.products, this.size).map((value) => parseFloat(value));
-    let sizes = rawSizes.map((value) =>(value - Math.min(...rawSizes)) / (Math.max(...rawSizes) - Math.min(...rawSizes)));
-
-    let rawColors: number[] = this.getValues(this.products, this.color).map((value) => parseFloat(value));
-    let colors = rawColors.map((value) => (value - Math.min(...rawColors)) / (Math.max(...rawColors) - Math.min(...rawColors)));
+    let sizes = this.normalizeNumbers(this.getValues(this.products, this.size).map((value) => parseFloat(value)));
+    let colors = this.normalizeNumbers(this.getValues(this.products, this.color).map((value) => parseFloat(value)));
 
     var data = [{
       name: "Products",
