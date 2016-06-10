@@ -36,6 +36,7 @@ const barrels: string[] = [
   'app/product-details',
   'app/configurator/boolean-configurator',
   'app/configurator/integer-configurator',
+  'app/configurator/string-configurator',
   /** @cli-barrel */
 ];
 

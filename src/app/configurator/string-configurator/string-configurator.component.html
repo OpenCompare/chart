@@ -1,0 +1,3 @@
+<select [id]="feature" class="form-control" multiple (change)="update($event)">
+  <option *ngFor="let content of uniqueValues(feature)">{{content}}</option>
+</select>

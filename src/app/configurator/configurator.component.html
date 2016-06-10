@@ -15,9 +15,7 @@
       <oc-number-configurator *ngSwitchWhen='"RealValue"' [feature]="feature" [products]="pcmContainer.pcm.products.array"></oc-number-configurator>
 
       <!-- Default -->
-      <select *ngSwitchDefault [id]="feature" class="form-control" multiple>
-        <option *ngFor="let content of uniqueValues(feature)">{{content}}</option>
-      </select>
+      <oc-string-configurator *ngSwitchDefault [feature]="feature" [products]="pcmContainer.pcm.products.array"></oc-string-configurator>
 
     </div>
 

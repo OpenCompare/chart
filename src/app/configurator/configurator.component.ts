@@ -2,13 +2,14 @@ import {Component, OnInit, Input, OnChanges} from '@angular/core';
 import {PCMApi} from "../PCMApi";
 import {BooleanConfiguratorComponent} from "./boolean-configurator/boolean-configurator.component";
 import {NumberConfiguratorComponent} from "./number-configurator/number-configurator.component";
+import {StringConfiguratorComponent} from "./string-configurator/string-configurator.component";
 
 @Component({
   moduleId: module.id,
   selector: 'oc-configurator',
   templateUrl: 'configurator.component.html',
   styleUrls: ['configurator.component.css'],
-  directives: [BooleanConfiguratorComponent, NumberConfiguratorComponent]
+  directives: [BooleanConfiguratorComponent, NumberConfiguratorComponent, StringConfiguratorComponent]
 })
 export class ConfiguratorComponent implements OnInit, OnChanges {
 
@@ -34,12 +35,6 @@ export class ConfiguratorComponent implements OnInit, OnChanges {
         feature.type = type.substring("org.opencompare.model.".length);
       });
     }
-  }
-
-  uniqueValues(feature) : Set<string> {
-    let uniqueValues = new Set<string>();
-    feature.cells.array.forEach((cell) => uniqueValues.add(cell.content));
-    return uniqueValues;
   }
 
 }
