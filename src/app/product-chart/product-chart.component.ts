@@ -43,13 +43,13 @@ export class ProductChartComponent implements OnInit, OnChanges, DoCheck {
     this.updatePCM(true);
   }
 
-
   ngDoCheck() {
     this.updatePCM(false);
   }
 
   updatePCM(init: boolean) {
     if (typeof this.pcmContainer !== "undefined") {
+
       this.chartDiv = <HTMLDivElement> document.getElementById('chart');
 
       this.products = this.pcmContainer.pcm.products.array.filter((product) => typeof product.filtered === "undefined" || !product.filtered);
@@ -71,7 +71,13 @@ export class ProductChartComponent implements OnInit, OnChanges, DoCheck {
 
         // Initialize chart
         this.updateChart();
+
+      } else if (!init) {
+        // Update chart
+        this.updateChart();
       }
+
+
 
     }
   }

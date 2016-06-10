@@ -1,11 +1,13 @@
 import {Component, OnInit, Input, OnChanges} from '@angular/core';
 import {PCMApi} from "../PCMApi";
+import {BooleanConfiguratorComponent} from "./boolean-configurator/boolean-configurator.component";
 
 @Component({
   moduleId: module.id,
   selector: 'oc-configurator',
   templateUrl: 'configurator.component.html',
-  styleUrls: ['configurator.component.css']
+  styleUrls: ['configurator.component.css'],
+  directives: [BooleanConfiguratorComponent]
 })
 export class ConfiguratorComponent implements OnInit, OnChanges {
 
@@ -24,7 +26,7 @@ export class ConfiguratorComponent implements OnInit, OnChanges {
   ngOnChanges(changes:{}):any {
     if (typeof this.pcmContainer !== "undefined") {
       this.features = this.pcmContainer.pcm.features.array;
-      
+
       // Compute main type of features in order to create specialized inputs
       this.features.forEach((feature) => {
         let type = this.pcmApi.getMainTypeOfFeature(feature);
@@ -59,15 +61,5 @@ export class ConfiguratorComponent implements OnInit, OnChanges {
     feature.cells.array.forEach((cell) => uniqueValues.add(cell.content));
     return uniqueValues;
   }
-
-  filterBoolean(feature, value) {
-    // FIXME : checkbox is not enough to represent a filter for boolean, we need an undefined state
-    let products = this.pcmContainer.pcm.products.array;
-    products.forEach((product: {filtered : boolean}) => {
-      let cell = this.pcmApi.findCell(product, feature);
-      product.filtered = cell.interpretation.value === value;
-    });
-  }
-
 
 }

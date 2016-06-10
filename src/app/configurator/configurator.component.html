@@ -6,9 +6,7 @@
     <div class="col-sm-10" [ngSwitch]="feature.type">
 
       <!-- Boolean -->
-      <div class="checkbox" *ngSwitchWhen='"BooleanValue"' >
-          <input type="checkbox" #checkbox (change)="filterBoolean(feature, checkbox.checked)">
-      </div>
+      <oc-boolean-configurator *ngSwitchWhen='"BooleanValue"' [feature]="feature" [products]="pcmContainer.pcm.products.array"></oc-boolean-configurator>
 
       <!-- Integer -->
       <input *ngSwitchWhen='"IntegerValue"' [min]="feature.min" [max]="feature.max" [value]="feature.min" type="number" class="form-control">
