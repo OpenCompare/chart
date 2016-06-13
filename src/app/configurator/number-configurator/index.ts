@@ -1,1 +1,1 @@
-export { NumberConfiguratorComponent } from './integer-configurator.component';
+export { NumberConfiguratorComponent } from './number-configurator.component';
